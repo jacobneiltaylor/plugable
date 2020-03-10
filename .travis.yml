@@ -16,3 +16,8 @@ script:
 
 after_success:
   - if [ "$TRAVIS_PYTHON_VERSION" = "3.7" ]; then coveralls; fi
+
+deploy:
+  provider: pypi
+  username: jacobneiltaylor
+  edge: true 
