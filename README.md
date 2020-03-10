@@ -1,5 +1,10 @@
 # Plugable: A Python Plugin Framework
 
+## Badges:
+ - **Build:** [![Build Status](https://travis-ci.com/jacobneiltaylor/plugable.svg?branch=master)](https://travis-ci.com/jacobneiltaylor/plugable)
+ - **Coverage:** [![Coverage Status](https://coveralls.io/repos/github/jacobneiltaylor/plugable/badge.svg?branch=master)](https://coveralls.io/github/jacobneiltaylor/plugable?branch=master)
+
+
 This package exposes a framework for writing extensible applications.
 
 Specifically, it allows consumers to mark an abstract class as "Plugable", using standard inheritance semantics and ABC decorators:
