@@ -1,3 +1,4 @@
+import mock
 import pytest
 
 import plugable.class_registry as module
@@ -30,14 +31,14 @@ class ExternalSubclass(Subclass2):
 _NAMES = ("class1", "class2", "class3")
 
 
-def _get_entrypoints_mock(name):
+def _get_entrypoints_mock():
     class MockEntrypoint:
         def load(self):
             def func():
                 return {"class4": ExternalSubclass}.items()
             return func
 
-    return [MockEntrypoint()]
+    return mock.MagicMock(return_value=[MockEntrypoint()])
 
 
 def _get_test_reg():
@@ -83,13 +84,9 @@ def test_registry_get_fail():
     assert str(excinfo.value) == "'class4'"
 
 
+@mock.patch("pkg_resources.iter_entry_points", _get_entrypoints_mock())
 def test_registry_external():
-    temp = module._get_entrypoints
-    module._get_entrypoints = _get_entrypoints_mock
-
     reg = _get_test_reg()
     reg.entrypoint = "dummy"
     reg.register_externals()
     assert reg.get("class4").data == 666
-
-    module._get_entrypoints = temp

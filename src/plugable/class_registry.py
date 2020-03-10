@@ -1,10 +1,6 @@
 import pkg_resources
 
 
-def _get_entrypoints(name):
-    return pkg_resources.iter_entry_points(name)
-
-
 class ClassRegistry:
     """
         Represents a collection of classes that implement a
@@ -28,6 +24,6 @@ class ClassRegistry:
         return self._registry[name](*args, **kwargs)
 
     def register_externals(self):
-        for entrypoint in _get_entrypoints(self.entrypoint):
+        for entrypoint in pkg_resources.iter_entry_points(self.entrypoint):
             for name, subcls in entrypoint.load()():
                 self.register(name, subcls)
