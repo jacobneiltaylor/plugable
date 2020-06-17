@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="plugable",
-    version="0.1.1",
+    version="0.1.9",
     author="Jacob Neil Taylor",
     author_email="me@jacobtaylor.id.au",
     description="A framework for writing extensible Python components",
