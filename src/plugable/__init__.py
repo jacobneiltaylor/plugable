@@ -8,9 +8,7 @@ class Plugable(metaclass=PlugableMeta):
 
     @classmethod
     def get(cls, name, *args, **kwargs):
-        instance = cls.registry.get(name, *args, **kwargs)
-        if isinstance(instance, cls):
-            return instance
+        return cls.registry.get(name, *args, **kwargs)
 
 
 __all__ = [
