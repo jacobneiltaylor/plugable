@@ -8,7 +8,12 @@ class Plugable(metaclass=PlugableMeta):
 
     @classmethod
     def get(cls, name, *args, **kwargs):
-        return cls.registry.get(name, *args, **kwargs)
+        instance = cls.registry.get(name, *args, **kwargs)
+        if isinstance(instance, cls):
+            return instance
+        inst_name = type(instance).__name__
+        cls_name = cls.__name__
+        raise RuntimeError(f"'{inst_name}' isn't a subclass of '{cls_name}'")
 
 
 __all__ = [

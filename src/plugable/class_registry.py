@@ -17,11 +17,16 @@ class ClassRegistry:
         else:
             raise TypeError(f"{subcls} is not a subclass of {self.root_class}")
 
+    def __getitem__(self, key: str):
+        cls = self._registry[key]
+        assert(issubclass(cls, self.root_class))
+        return cls
+
     def enum(self) -> list:
         return list(self._registry.keys())
 
     def get(self, name, *args, **kwargs):
-        return self._registry[name](*args, **kwargs)
+        return self[name](*args, **kwargs)
 
     def register_externals(self):
         for entrypoint in pkg_resources.iter_entry_points(self.entrypoint):
