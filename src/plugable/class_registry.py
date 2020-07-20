@@ -16,12 +16,12 @@ class ClassRegistry:
             self._registry[name] = subcls
         else:
             raise TypeError(f"{subcls} is not a subclass of {self.root_class}")
-            
+
     def __getitem__(self, key: str):
         cls = self._registry[key]
         assert(issubclass(cls, self.root_class))
         return cls
-        
+
     def enum(self) -> list:
         return list(self._registry.keys())
 
