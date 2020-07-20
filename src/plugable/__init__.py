@@ -11,7 +11,7 @@ class Plugable(metaclass=PlugableMeta):
         instance = cls.registry.get(name, *args, **kwargs)
         if isinstance(instance, cls):
             return instance
-        inst_name = type(instance}.__name__
+        inst_name = type(instance).__name__
         cls_name = cls.__name__
         raise RuntimeError(f"'{inst_name}' isn't a subclass of '{cls_name}'")
 
