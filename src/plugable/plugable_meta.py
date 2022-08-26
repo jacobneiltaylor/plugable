@@ -10,6 +10,7 @@ class PlugableMeta(abc.ABCMeta):
     """
     REGISTRY_ATTR_NAME = "registry"
     ANCHOR_ATTR_NAME = "plugable_anchor"
+    REGNAME_ATTR_NAME = "registered_name" 
 
     @classmethod
     def _is_anchor(cls, base):
@@ -19,11 +20,16 @@ class PlugableMeta(abc.ABCMeta):
     @classmethod
     def __prepare__(cls, name, bases, **kwargs):
         namespace = {}
+        registered_name = None
+        
+        if "register" in kwargs:
+            registered_name = kwargs["register"]
 
         for base in bases:
             if cls._is_anchor(base):
                 namespace[cls.ANCHOR_ATTR_NAME] = False
                 namespace[cls.REGISTRY_ATTR_NAME] = ClassRegistry()
+                namespace[cls.REGNAME_ATTR_NAME] = registered_name
                 break
 
         return namespace
