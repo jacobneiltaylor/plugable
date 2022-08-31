@@ -9,7 +9,7 @@ env:
   BUILD_PYTHON_VERSION: "3.10"
 jobs:
   test:
-    name: "Run unit, formatting, and linting testsß"
+    name: "Run unit, formatting, and linting tests"
     runs-on: ubuntu-latest
     strategy:
       matrix:

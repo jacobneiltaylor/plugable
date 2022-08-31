@@ -14,8 +14,7 @@ format: install
 
 .PHONY: format-check
 format-check: install
-	poetry run black src test --check
-	poetry run isort src test --check
+	poetry run tox -e format
 
 .PHONY: unit
 unit: install

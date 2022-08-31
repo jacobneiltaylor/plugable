@@ -1,4 +1,5 @@
 from typing import Optional, Text
+
 from .class_registry import ClassRegistry
 from .plugable_meta import PlugableMeta
 
