@@ -137,3 +137,4 @@ dmypy.json
 coverage.lcov
 .DS_Store
 test-reports
+Pipfile
