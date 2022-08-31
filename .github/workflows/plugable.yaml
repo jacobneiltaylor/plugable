@@ -5,6 +5,8 @@ on:
     types:
       - opened
       - reopened
+env:
+  BUILD_PYTHON_VERSION: "3.10"
 jobs:
   run-tests:
     runs-on: ubuntu-latest
@@ -38,11 +40,6 @@ jobs:
         with:
           path: ~/.local
           key: poetry-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Cache Tox
-        uses: actions/cache@v2
-        with:
-          path: ./.tox
-          key: tox-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Run test cases & lint checks
         run: make test
       - name: Convert coverage data into LCOV format 
@@ -69,10 +66,30 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
-      - name: Install Python 3.10
+      - name: Install Python ${{ env.BUILD_PYTHON_VERSION }}
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: ${{ env.BUILD_PYTHON_VERSION }}
+      - name: Upgrade pip to latest
+        run: python3 -m pip install --upgrade pip
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache Pip
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: pip-${{ runner.os }}-${{ env.BUILD_PYTHON_VERSION }} }}
+      - name: Cache Poetry
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-cache-${{ runner.os }}-${{ env.BUILD_PYTHON_VERSION }} }}
+      - name: Cache Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.local
+          key: poetry-${{ runner.os }}-${{ env.BUILD_PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}
       - name: Build packages
         run: make build
       - name: Publish packages to PyPI
