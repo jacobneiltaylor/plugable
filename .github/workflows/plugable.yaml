@@ -114,7 +114,7 @@ jobs:
   prerelease:
     name: "Release new candidate version"
     runs-on: "ubuntu-latest"
-    if: github.event_name == 'push' && github.ref == "refs/heads/master"
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/download-artifact@v3
         with:
