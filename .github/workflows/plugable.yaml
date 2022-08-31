@@ -101,8 +101,10 @@ jobs:
       - name: Determine package version
         id: pkg-ver
         run: "echo ::set-output name=semver::$(poetry run python3 ./scripts/determine_version.py $(git describe --tags))"
+      - name: Save version to file
+        run: echo "${{ steps.pkg-ver.outputs.semver }}" > VERSION
       - name: Set version
-        run: "poetry version ${{ steps.pkg-ver.outputs.semver }}"
+        run: poetry version ${{ steps.pkg-ver.outputs.semver }}
       - name: Build packages
         run: make build
       - name: Upload package artifacts
@@ -110,6 +112,11 @@ jobs:
         with:
           name: dist-pkgs
           path: dist/
+      - name: Upload version artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: version-file
+          path: VERSION
 
   prerelease:
     name: "Release new candidate version"
@@ -117,16 +124,17 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: build
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
+      - name: Download version file
+        uses: actions/download-artifact@v3
         with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v3
+          name: version-file
+      - name: Download built packages
+        uses: actions/download-artifact@v3
         with:
           name: dist-pkgs
-      - name: Determine package version
+      - name: Read package version
         id: pkg-ver
-        run: "echo ::set-output name=semver::$(poetry run python3 ./scripts/determine_version.py $(git describe --tags))"
+        run: "echo ::set-output name=semver::$(cat VERSION)"
       - uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -143,16 +151,17 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     needs: build
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
+      - name: Download version file
+        uses: actions/download-artifact@v3
         with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v3
+          name: version-file
+      - name: Download built packages
+        uses: actions/download-artifact@v3
         with:
           name: dist-pkgs
-      - name: Determine package version
+      - name: Read package version
         id: pkg-ver
-        run: "echo ::set-output name=semver::$(poetry run python3 ./scripts/determine_version.py $(git describe --tags))"
+        run: "echo ::set-output name=semver::$(cat VERSION)"
       - uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -169,7 +178,8 @@ jobs:
     needs: release
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Download built packages
+        uses: actions/download-artifact@v3
         with:
           name: dist-pkgs
       - name: Publish packages to PyPI
