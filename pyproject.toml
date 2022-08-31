@@ -28,6 +28,7 @@ tox-poetry = "^0.4.1"
 types-setuptools = "^65.1.0"
 types-mock = "^4.0.15"
 Flake8-pyproject = "^1.1.0"
+tox-gh-actions = "^2.9.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
