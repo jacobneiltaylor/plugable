@@ -1,10 +1,12 @@
+from typing import Optional, Text
 from .class_registry import ClassRegistry
 from .plugable_meta import PlugableMeta
 
 
 class Plugable(metaclass=PlugableMeta):
-    registry = ClassRegistry()
-    plugable_anchor = True
+    registry: ClassRegistry = ClassRegistry()
+    plugable_anchor: bool = True
+    registered_as: Optional[Text] = None
 
     @classmethod
     def get(cls, name, *args, **kwargs):
