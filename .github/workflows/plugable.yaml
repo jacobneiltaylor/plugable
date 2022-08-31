@@ -9,22 +9,32 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
-      - name: Cache Poetry
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pypoetry
-          key: poetry-cache-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
-      - name: Cache Packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.local
-          key: poetry-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Upgrade pip to latest
         run: python3 -m pip install --upgrade pip
+      - name: Cache Pip
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: pip-${{ runner.os }}-${{ matrix.python-version }} }}
+      - name: Cache Poetry
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-cache-${{ runner.os }}-${{ matrix.python-version }} }}
+      - name: Cache Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.local
+          key: poetry-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Cache Tox
+        uses: actions/cache@v2
+        with:
+          path: ./.tox
+          key: tox-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Run test cases & lint checks
         run: make test
       - name: Convert coverage data into LCOV format 
