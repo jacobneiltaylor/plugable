@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "plugable"
+version = "0.0.0"
+description = "A framework for writing extensible Python components"
+authors = ["Jacob Neil Taylor <me@jacobtaylor.id.au>"]
+license = "MIT"
+packages = [
+    { include = "plugable", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[tool.poetry.dev-dependencies]
+isort = "^5.10.1"
+pytest-cov = "^3.0.0"
+coverage = {extras = ["toml"], version = "^6.4.4"}
+flake8 = "^5.0.4"
+mypy = "^0.971"
+mock = "^4.0.3"
+black = "^22.6.0"
+pytest = "^7.1.2"
+ipython = "^8.4.0"
+tox = "^3.25.1"
+tox-poetry = "^0.4.1"
+types-setuptools = "^65.1.0"
+types-mock = "^4.0.15"
+Flake8-pyproject = "^1.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line_length = 88
+include = '\.pyi?$'
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "@(abc.)?abstractmethod",
+]
+ignore_errors = true
+
+[tool.coverage.html]
+directory = "test-reports/coverage_html"
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = "E203"

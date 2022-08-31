@@ -16,6 +16,4 @@ class Plugable(metaclass=PlugableMeta):
         raise RuntimeError(f"'{inst_name}' isn't a subclass of '{cls_name}'")
 
 
-__all__ = [
-    "Plugable"
-]
+__all__ = ["Plugable"]

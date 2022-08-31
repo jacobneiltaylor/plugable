@@ -3,9 +3,10 @@ import pkg_resources
 
 class ClassRegistry:
     """
-        Represents a collection of classes that implement a
-        given interface (specified by root_class)
+    Represents a collection of classes that implement a
+    given interface (specified by root_class)
     """
+
     def __init__(self):
         self.root_class = None
         self.entrypoint = None
@@ -19,7 +20,7 @@ class ClassRegistry:
 
     def __getitem__(self, key: str):
         cls = self._registry[key]
-        assert(issubclass(cls, self.root_class))
+        assert issubclass(cls, self.root_class)
         return cls
 
     def enum(self) -> list:

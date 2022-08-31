@@ -5,12 +5,13 @@ from .class_registry import ClassRegistry
 
 class PlugableMeta(abc.ABCMeta):
     """
-        Enables the creation of abstract classes that can automatically
-        discover and load their concrete implementations at runtime
+    Enables the creation of abstract classes that can automatically
+    discover and load their concrete implementations at runtime
     """
+
     REGISTRY_ATTR_NAME = "registry"
     ANCHOR_ATTR_NAME = "plugable_anchor"
-    REGNAME_ATTR_NAME = "registered_name" 
+    REGNAME_ATTR_NAME = "registered_name"
 
     @classmethod
     def _is_anchor(cls, base):
@@ -21,7 +22,7 @@ class PlugableMeta(abc.ABCMeta):
     def __prepare__(cls, name, bases, **kwargs):
         namespace = {}
         registered_name = None
-        
+
         if "register" in kwargs:
             registered_name = kwargs["register"]
 

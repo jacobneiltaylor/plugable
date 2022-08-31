@@ -36,6 +36,7 @@ def _get_entrypoints_mock():
         def load(self):
             def func():
                 return {"class4": ExternalSubclass}.items()
+
             return func
 
     return mock.MagicMock(return_value=[MockEntrypoint()])
@@ -70,9 +71,11 @@ def test_registry_reg_fail():
     reg = _get_test_reg()
 
     with pytest.raises(TypeError) as excinfo:
-        reg.register("class4",  InvalidClass)
+        reg.register("class4", InvalidClass)
 
-    assert str(excinfo.value) == f"{InvalidClass} is not a subclass of {Superclass}"  # noqa: E501
+    assert (
+        str(excinfo.value) == f"{InvalidClass} is not a subclass of {Superclass}"
+    )  # noqa: E501
 
 
 def test_registry_get_fail():
