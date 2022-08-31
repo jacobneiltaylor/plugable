@@ -91,7 +91,7 @@ jobs:
           key: poetry-${{ runner.os }}-${{ env.BUILD_PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}
       - name: Determine package version
         id: pkg-ver
-        run: "echo ::set-output name=ver::$(echo \"import semver; tag = \"$(git describe --tags --abbrev=0)\"; \n if \"-\" in tag: ver, pre, git = tag.split(\"-\"); print(f\"{semver.VersionInfo.parse(ver).bump_patch()}-pre.{pre}+build.{git}\") \nelse: print(tag)\" | poetry run python3)"
+        run: "echo ::set-output name=ver::$(echo \"import semver; tag = \\\"$(git describe --tags)\\\"; \\nif \\\"-\\\" in tag: ver, pre, git = tag.split(\\\"-\\\"); print(f\\\"{semver.VersionInfo.parse(ver).bump_patch()}-pre.{pre}+build.{git}\\\") \\nelse: print(tag)\" | poetry run python3)"
       - name: Build packages
         run: make build
       - name: Upload package artifacts
