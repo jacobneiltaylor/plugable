@@ -41,8 +41,6 @@ jobs:
         with:
           path: ~/.local
           key: poetry-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Run formatting checks
-        run: make format-check
       - name: Run test cases & lint checks
         run: make test
       - name: Convert coverage data into LCOV format 
