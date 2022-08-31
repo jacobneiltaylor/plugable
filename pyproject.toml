@@ -2,6 +2,8 @@
 name = "plugable"
 version = "0.0.0"
 description = "A framework for writing extensible Python components"
+long_description = file: README.md
+long_description_content_type = text/markdown
 authors = ["Jacob Neil Taylor <me@jacobtaylor.id.au>"]
 license = "MIT"
 packages = [
