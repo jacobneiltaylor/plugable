@@ -1,15 +1,39 @@
 name: Plugable CI/CD Pipeline
 on: 
-  push: {}
+  push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
     types:
       - opened
       - reopened
 env:
   BUILD_PYTHON_VERSION: "3.10"
 jobs:
+  check:
+    name: Check files
+    outputs:
+      proceed: ${{ steps.check_files.outputs.any_changed }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check if pertinent files modified
+        id: check_files
+        uses: tj-actions/changed-files@v29.0.2
+        with:
+          files: |
+            src
+            test
+
   test:
     name: "Run unit, formatting, and linting tests"
+    needs: check
+    if: needs.check.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -100,7 +124,7 @@ jobs:
         run: make install
       - name: Determine package version
         id: pkg-ver
-        run: "echo ::set-output name=semver::$(poetry run python3 ./scripts/determine_version.py $(git describe --tags))"
+        run: "echo ::set-output name=semver::$(poetry run python3 ./scripts/determine_version.py $(git describe --tags --candidates=99 --exclude \"*-*\"))"
       - name: Save version to file
         run: echo "${{ steps.pkg-ver.outputs.semver }}" > VERSION
       - name: Set version
