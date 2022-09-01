@@ -2,10 +2,10 @@ name: Plugable CI/CD Pipeline
 on: 
   push:
     branches:
-      - main
+      - masterß
   pull_request:
     branches:
-      - main
+      - master
     types:
       - opened
       - reopened
