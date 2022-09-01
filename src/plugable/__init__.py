@@ -1,7 +1,7 @@
 from typing import Optional, Text
 
-from .class_registry import ClassRegistry
-from .plugable_meta import PlugableMeta
+from plugable.class_registry import ClassRegistry
+from plugable.plugable_meta import PlugableMeta
 
 
 class Plugable(metaclass=PlugableMeta):
@@ -19,4 +19,4 @@ class Plugable(metaclass=PlugableMeta):
         raise RuntimeError(f"'{inst_name}' isn't a subclass of '{cls_name}'")
 
 
-__all__ = ["Plugable"]
+__all__ = ("Plugable", "ClassRegistry", "PlugableMeta")

@@ -1,6 +1,6 @@
 import abc
 
-from .class_registry import ClassRegistry
+from plugable.class_registry import ClassRegistry
 
 
 class PlugableMeta(abc.ABCMeta):
@@ -37,14 +37,15 @@ class PlugableMeta(abc.ABCMeta):
 
     def __new__(self, name, bases, dct, register=None, entrypoint=None):
         new_class = super().__new__(self, name, bases, dct)
+        reg: ClassRegistry = getattr(new_class, "registry")
 
         for base in bases:
             if self._is_anchor(base):
-                new_class.registry.root_class = new_class
-                new_class.registry.entrypoint = entrypoint
+                reg.root_class = new_class
+                reg.entrypoint = entrypoint
                 break
 
         if register:
-            new_class.registry.register(register, new_class)
+            reg.register(register, new_class)
 
         return new_class
