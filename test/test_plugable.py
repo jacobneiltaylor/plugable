@@ -35,10 +35,14 @@ class PlugableImplCustomInit(AbstractPlugable, register="custom"):
         return self._x + self._y
 
 
-def test_plugable_base():
-    assert AbstractPlugable.get("one").example() == 1
-    assert AbstractPlugable.get("two").example() == 2
-    assert AbstractPlugable.get("three").example() == 3
+@pytest.mark.parametrize(
+    ("impl", "retval"),
+    (("one", 1), ("two", 2), ("three", 3)),
+    ids=("one", "two", "three"),
+)
+def test_plugable_base(impl, retval):
+    assert AbstractPlugable.get(impl).example() == retval
+    assert AbstractPlugable.get(impl).registered_as == impl
 
 
 def test_plugable_fail():

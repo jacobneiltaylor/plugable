@@ -161,6 +161,8 @@ jobs:
       - name: Read package version
         id: pkg-ver
         run: "echo ::set-output name=semver::$(cat VERSION)"
+      - name: List out directory
+        run: ls -lah ./
       - uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
