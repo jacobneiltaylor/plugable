@@ -21,11 +21,6 @@ class PlugableImpl2(AbstractPlugable, register="two"):
         return 2
 
 
-class PlugableImpl3(AbstractPlugable, register="three"):
-    def example(self):
-        return 3
-
-
 class PlugableImplCustomInit(AbstractPlugable, register="custom"):
     def __init__(self, x, y):
         self._x = x
@@ -33,6 +28,20 @@ class PlugableImplCustomInit(AbstractPlugable, register="custom"):
 
     def example(self):
         return self._x + self._y
+
+
+class PlugablePartialImpl(AbstractPlugable):
+    @abc.abstractmethod
+    def inner(self):
+        pass
+
+    def example(self):
+        return self.inner()
+
+
+class PlugableImpl3(PlugablePartialImpl, register="three"):
+    def inner(self):
+        return 3
 
 
 @pytest.mark.parametrize(
@@ -50,6 +59,17 @@ def test_plugable_fail():
         AbstractPlugable.get("nonexistent")
 
     assert str(excinfo.value) == "'nonexistent'"
+
+
+def test_plugable_class_scope():
+    assert PlugablePartialImpl.get("three").example() == 3
+    with pytest.raises(RuntimeError) as excinfo:
+        PlugablePartialImpl.get("two")
+
+    assert (
+        str(excinfo.value)
+        == f"'PlugableImpl2' isn't a subclass of 'PlugablePartialImpl'"
+    )
 
 
 def test_plugable_register():

@@ -143,6 +143,11 @@ jobs:
         with:
           name: version-file
           path: VERSION
+      - name: Upload license
+        uses: actions/upload-artifact@v3
+        with:
+          name: license-file
+          path: LICENSE
 
   prerelease:
     name: "Release new candidate version"
@@ -150,6 +155,10 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: build
     steps:
+      - name: Download version file
+        uses: actions/download-artifact@v3
+        with:
+          name: license-file
       - name: Download version file
         uses: actions/download-artifact@v3
         with:
@@ -171,7 +180,7 @@ jobs:
           title: "Prerelease Build: ${{ steps.pkg-ver.outputs.semver }}"
           files: |
             LICENSE
-            dist/*
+            plugable-*
 
   release:
     name: "Release new version"
@@ -183,6 +192,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: version-file
+      - name: Upload license
+        uses: actions/upload-artifact@v3
+        with:
+          name: license-file
+          path: LICENSE
       - name: Download built packages
         uses: actions/download-artifact@v3
         with:
@@ -198,7 +212,7 @@ jobs:
           title: "Release Build: ${{ steps.pkg-ver.outputs.semver }}"
           files: |
             LICENSE
-            dist/*
+            plugable-*
 
   publish:
     name: "Publish new release to PyPI"
@@ -210,6 +224,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist-pkgs
+      - name: Make dist directory
+        run: mkdir ./dist
+      - name: Move packages into dist directory
+        run: mv ./plugable-* ./dist
       - name: Publish packages to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.5
         with:
