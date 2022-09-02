@@ -68,7 +68,7 @@ def test_plugable_class_scope():
 
     assert (
         str(excinfo.value)
-        == f"'PlugableImpl2' isn't a subclass of 'PlugablePartialImpl'"
+        == "'PlugableImpl2' isn't a subclass of 'PlugablePartialImpl'"
     )
 
 
